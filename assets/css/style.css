@@ -1,0 +1,50 @@
+
+.pac-container {
+    background-color: #FFF;
+    z-index: 2000;
+    position: fixed;
+    display: inline-block;
+    float: left;
+}
+
+.progress-bar-danger {
+    text-align: right;
+}
+
+.bootstrap-filestyle {
+    width:200px;
+}
+
+button.dt-button.red {
+    display: block;
+    visibility: hidden;
+    height: 0px;
+}
+
+button.dt-button, div.dt-button, a.dt-button {
+    color: #fff!important;
+    background: #5cb85c!important;
+    border: 1px solid #4cae4c!important;
+}
+
+button.dt-button:hover {
+    color: #fff!important;
+    background: #449d44!important;
+    border:1px solid #398439!important;
+}
+
+#modal_setting .modal-body {
+    height: 300px;
+}
+
+#export_csv_btn a {
+    color:#fff;
+}
+
+.red-color {
+    background: #dd4b39;
+}
+
+.green-color {
+    background: #5cb85c;
+}
