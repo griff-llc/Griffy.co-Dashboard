@@ -44,46 +44,7 @@
                 echo '<th>' . $item->name . '</th>';
               }
             ?>
-            <!-- <th>Identify</th>
-            <th>Street Number</th>
-            <th>Street Name</th>
-            <th>City</th>
-            <th>State</th>
-            <th>zipcode</th>
-            <th>Regist</th>
-            <th>Start Time</th>            
-            <th>zpid</th>
-            <th>homedetails</th>
-            <th>graphsanddata</th>
-            <th>mapthishome</th>
-            <th>comparables</th>
-            <th>latitude</th>
-            <th>longitude</th>
-            <th>FIPScounty</th>
-            <th>useCode</th>
-            <th>taxAssessmentYear</th>
-            <th>taxAssessment</th>
-            <th>yearBuilt</th>
-            <th>lotSizeSqFt</th>
-            <th>finishedSqFt</th>
-            <th>bathrooms</th>
-            <th>bedrooms</th>
-            <th>totalRooms</th>
-            <th>lastSoldDate</th>
-            <th>lastSoldPrice</th>
-            <th>amount</th>
-            <th>last-updated</th>
-            <th>oneWeekChange</th>
-            <th>valueChange</th>
-            <th>Duration</th>
-            <th>Currency</th>
-            <th>valuationRange_low</th>
-            <th>valuationRange_high</th>
-            <th>percentile</th>
-            <th>zindexValue</th>
-            <th>overview</th>
-            <th>forSaleByOwner</th>
-            <th>forSale</th> -->
+            
             <th style="min-width:90px!important;">Action</th>
           </tr>
         </thead>
@@ -138,11 +99,8 @@
         "scrollX": true,
         scrollCollapse: true,
         
-        "processing": true, //Feature control the processing indicator.
-        "serverSide": true, //Feature control DataTables' server-side processing mode.
-        //"buttons" :[ 'colvis' ],
-        
-        // Load data for the table's content from an Ajax source
+        "processing": true,
+        "serverSide": true, 
         "ajax": {
           "url": "<?php echo site_url('address/ajax_list')?>",
           "type": "POST"
@@ -151,9 +109,7 @@
         colReorder: {
             fixedColumnsLeft: 1,
             fixedColumnsRight: 1
-        },
-        
-        //Set column definition initialisation properties.
+        },      
         "columnDefs": [
           { 
             "targets": [ -1,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39], //last column
@@ -168,7 +124,8 @@
       
       showSetting();
 
-      table.on('column-reorder', function ( e, settings, details ) {        
+      table.on('column-reorder', function ( e, settings, details ) {
+        event.preventDefault();
         $.ajax({
           url : "<?php echo site_url('address/update_orderinfo')?>",
           type: "GET",
@@ -188,7 +145,6 @@
     });
 
     
-
     function showSetting() {
       $.ajax({
         url : "<?php echo site_url('address/settinginfo')?>",
@@ -197,14 +153,42 @@
         success: function(res)
         {
           table.colReorder.order([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]);
-          for(var i=0; i<37; i++) 
-            table.columns( [i] ).visible(false);
-          var items = document.getElementsByName('settingcheck');
-          for(var i=0; i<res.data.length; i++) {
-            table.columns( res.data[i] ).visible(true);
-            items[res.data[i]].checked = true;
-          }
           table.colReorder.order(res.order.split(','));
+          var items = document.getElementsByName('settingcheck');
+          
+          for(var i=0; i<40; i++) 
+          {
+            table.columns( [i] ).visible(true);
+            var flag = false;
+            for(var k=0; k<res.dialog.length; k++) {
+              if(Number(res.dialog[k]) == i)
+                flag = true;
+            }
+
+
+            if(flag) {
+              //table.columns( [i] ).visible(true);
+              items[i].checked = true;
+            }
+            else {
+              //table.columns( [i] ).visible(false);
+              items[i].checked = false;
+            }
+          }
+         
+          //var items = document.getElementsByName('settingcheck');
+          for(var i=0; i<res.dorder.length; i++) {
+             var flag = false;
+             for(var k=0;k<res.dialog.length;k++) {
+               if(res.dorder[i] == res.dialog[k]) {
+                  flag = true;
+               }               
+             }
+             
+             if(!flag) {                
+                table.columns( [i] ).visible(false);
+             }
+          }          
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -607,7 +591,17 @@
           'Your setting has been saved.',
           'success'
         );
-        showSetting();
+        var order = table.colReorder.order();
+        for(var i=0;i<40;i++)
+          table.columns( [i] ).visible(false);
+
+        for(var i=0; i<order.length; i++) {
+          for(var k=0; k<idx.length; k++) {             
+            if(idx[k] == order[i])
+              table.columns( [i] ).visible(true);             
+          }   
+        }
+         
         $('#modal_setting').modal('hide');
       },
       error: function (jqXHR, textStatus, errorThrown)

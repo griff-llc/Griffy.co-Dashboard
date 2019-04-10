@@ -45,15 +45,25 @@ class Address extends CI_Controller {
     public function settinginfo() {
         $row = $this->address_model->get_by_id_from_person();
         $data = explode(',',$row->settings);
-
+        
         $user_id = $this->session->userdata('logged_in')['users_id'];
         $user = $this->auth_model->get_by_id($user_id);
         if($user->setting_order == null || $user->setting_order == '' || strlen($user->setting_order)==0)
-            $user->setting_order = '0,2,3,4,5,6,7,8,1,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40';
+            $user->setting_order = '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40';
+        $setting_order = explode(',',$user->setting_order);
+        $visible = [];
+        for($i=0;$i<sizeof($data);$i++) {
+            for($k=0;$k<sizeof($setting_order);$k++) {
+                if($data[$i] == $setting_order[$k])
+                    $visible[] = $k;
+            }
+        }
         
         $param = array(
-            'data' => $data,
-            'order' => $user->setting_order
+            'data' => $visible,
+            'order' => $user->setting_order,
+            'dialog' => $data,
+            'dorder' => explode(',',$user->setting_order),
         );
         echo json_encode($param);
     }
