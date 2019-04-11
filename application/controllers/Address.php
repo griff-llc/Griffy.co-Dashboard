@@ -44,26 +44,10 @@ class Address extends CI_Controller {
 
     public function settinginfo() {
         $row = $this->address_model->get_by_id_from_person();
-        $data = explode(',',$row->settings);
-        
-        $user_id = $this->session->userdata('logged_in')['users_id'];
-        $user = $this->auth_model->get_by_id($user_id);
-        if($user->setting_order == null || $user->setting_order == '' || strlen($user->setting_order)==0)
-            $user->setting_order = '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40';
-        $setting_order = explode(',',$user->setting_order);
-        $visible = [];
-        for($i=0;$i<sizeof($data);$i++) {
-            for($k=0;$k<sizeof($setting_order);$k++) {
-                if($data[$i] == $setting_order[$k])
-                    $visible[] = $k;
-            }
-        }
         
         $param = array(
-            'data' => $visible,
-            'order' => $user->setting_order,
-            'dialog' => $data,
-            'dorder' => explode(',',$user->setting_order),
+            'data' => $row->settings,
+            'order' => $row->setting_order,
         );
         echo json_encode($param);
     }
@@ -81,6 +65,11 @@ class Address extends CI_Controller {
      */
     public function ajax_list()
     {
+        $user_id = $this->session->userdata('logged_in')['users_id'];
+        $user = $this->auth_model->get_by_id($user_id);
+        if($user->setting_order == null || $user->setting_order == '' || strlen($user->setting_order)==0)
+            $user->setting_order = '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40';
+        $setting_order = explode(',',$user->setting_order);
         $list = $this->address_model->getAddress();
         $data = array();
         $no = $_POST['start'];
@@ -88,43 +77,78 @@ class Address extends CI_Controller {
             $no++;
             $row = array();
             
-            $row[] = $person->identify;
-            $row[] = $person->street_number;
-            $row[] = $person->street_name;
+            $row['identify'] = $person->identify;
+            $row['street_number'] = $person->street_number;
+            $row['street_name'] = $person->street_name;
             //$row[] = $person->street_suffix;
-            $row[] = $person->city;
-            $row[] = $person->state;
-            $row[] = $person->zipcode;
-            $row[] = $person->data_addtime;
-            $row[] = $person->data_starttime;
+            $row['city'] = $person->city;
+            $row['state'] = $person->state;
+            $row['zipcode'] = $person->zipcode;
+            $row['data_addtime'] = $person->data_addtime;
+            $row['data_starttime'] = $person->data_starttime;
             $xml = $person->xml;
+
+            $col_names=[
+                "zpid",
+                "homedetails",
+                "graphsanddata",
+                "mapthishome",
+                "comparables",
+                "latitude",
+                "longitude",
+                "FIPScounty",
+                "useCode",
+                "taxAssessmentYear",
+                "taxAssessment",
+                "yearBuilt",
+                "lotSizeSqFt",
+                "finishedSqFt",
+                "bathrooms",
+                "bedrooms",
+                "totalRooms",
+                "lastSoldDate",
+                "lastSoldPrice",
+                "amount",
+                "last-updated",
+                "oneWeekChange",
+                "valueChanged",
+                "duration",
+                "currency",
+                "low",
+                "high",
+                "percentile",
+                "zindexValue",
+                "overview",
+                "forSaleByOwner",
+                "forSale",
+                "button"];
             
             if($xml != '' && strlen($xml)!= 0) {
                 $xml = simplexml_load_string($xml);
                 $xml = json_decode(json_encode($xml),true);            
                 
-                $row[] = isset($xml['response']['results']['result']['zpid'])?$xml['response']['results']['result']['zpid']:'';//zpid
-                $row[] = isset($xml['response']['results']['result']['links']['homedetails'])?$xml['response']['results']['result']['links']['homedetails']:'';//homedetails
-                $row[] = isset($xml['response']['results']['result']['links']['graphsanddata'])?$xml['response']['results']['result']['links']['graphsanddata']:'';//graphsanddata
-                $row[] = isset($xml['response']['results']['result']['links']['mapthishome'])?$xml['response']['results']['result']['links']['mapthishome']:'';//mapthishome
-                $row[] = isset($xml['response']['results']['result']['links']['comparables'])?$xml['response']['results']['result']['links']['comparables']:'';//comparables
-                $row[] = isset($xml['response']['results']['result']['address']['latitude'])?$xml['response']['results']['result']['address']['latitude']:'';//latitude
-                $row[] = isset($xml['response']['results']['result']['address']['longitude'])?$xml['response']['results']['result']['address']['longitude']:'';//longitude
-                $row[] = isset($xml['response']['results']['result']['FIPScounty'])?$xml['response']['results']['result']['FIPScounty']:'';//FIPScounty
-                $row[] = isset($xml['response']['results']['result']['useCode'])?$xml['response']['results']['result']['useCode']:'';//useCode
-                $row[] = isset($xml['response']['results']['result']['taxAssessmentYear'])?$xml['response']['results']['result']['taxAssessmentYear']:'';//taxAssessmentYear
-                $row[] = isset($xml['response']['results']['result']['taxAssessment'])?('$'.number_format($xml['response']['results']['result']['taxAssessment'],2)):'';//taxAssessment
-                $row[] = isset($xml['response']['results']['result']['yearBuilt'])?$xml['response']['results']['result']['yearBuilt']:'';//yearBuilt
-                $row[] = isset($xml['response']['results']['result']['lotSizeSqFt'])?$xml['response']['results']['result']['lotSizeSqFt']:'';//lotSizeSqFt
-                $row[] = isset($xml['response']['results']['result']['finishedSqFt'])?$xml['response']['results']['result']['finishedSqFt']:'';//finishedSqFt
-                $row[] = isset($xml['response']['results']['result']['bathrooms'])?$xml['response']['results']['result']['bathrooms']:'';//bathrooms
-                $row[] = isset($xml['response']['results']['result']['bedrooms'])?$xml['response']['results']['result']['bedrooms']:'';//bedrooms
-                $row[] = isset($xml['response']['results']['result']['totalRooms'])?$xml['response']['results']['result']['totalRooms']:'';//totalRooms
-                $row[] = isset($xml['response']['results']['result']['lastSoldDate'])?$xml['response']['results']['result']['lastSoldDate']:'';//lastSoldDate
-                $row[] = isset($xml['response']['results']['result']['lastSoldPrice'])?('$'.number_format($xml['response']['results']['result']['lastSoldPrice'])):'';//lastSoldPrice
-                $row[] = isset($xml['response']['results']['result']['zestimate']['amount'])?('$'.number_format($xml['response']['results']['result']['zestimate']['amount'])):'';//amount
-                $row[] = isset($xml['response']['results']['result']['zestimate']['last-updated'])?$xml['response']['results']['result']['zestimate']['last-updated']:'';//last-updated
-                $row[] = isset($xml['response']['results']['result']['zestimate']['oneWeekChange']['@attributes']['deprecated'])?$xml['response']['results']['result']['zestimate']['oneWeekChange']['@attributes']['deprecated']:'';//oneWeekChange
+                $row['zpid'] = isset($xml['response']['results']['result']['zpid'])?$xml['response']['results']['result']['zpid']:'';//zpid
+                $row['homedetails'] = isset($xml['response']['results']['result']['links']['homedetails'])?$xml['response']['results']['result']['links']['homedetails']:'';//homedetails
+                $row['graphsanddata'] = isset($xml['response']['results']['result']['links']['graphsanddata'])?$xml['response']['results']['result']['links']['graphsanddata']:'';//graphsanddata
+                $row['mapthishome'] = isset($xml['response']['results']['result']['links']['mapthishome'])?$xml['response']['results']['result']['links']['mapthishome']:'';//mapthishome
+                $row['comparables'] = isset($xml['response']['results']['result']['links']['comparables'])?$xml['response']['results']['result']['links']['comparables']:'';//comparables
+                $row['latitude'] = isset($xml['response']['results']['result']['address']['latitude'])?$xml['response']['results']['result']['address']['latitude']:'';//latitude
+                $row['longitude'] = isset($xml['response']['results']['result']['address']['longitude'])?$xml['response']['results']['result']['address']['longitude']:'';//longitude
+                $row['FIPScounty'] = isset($xml['response']['results']['result']['FIPScounty'])?$xml['response']['results']['result']['FIPScounty']:'';//FIPScounty
+                $row['useCode'] = isset($xml['response']['results']['result']['useCode'])?$xml['response']['results']['result']['useCode']:'';//useCode
+                $row['taxAssessmentYear'] = isset($xml['response']['results']['result']['taxAssessmentYear'])?$xml['response']['results']['result']['taxAssessmentYear']:'';//taxAssessmentYear
+                $row['taxAssessment'] = isset($xml['response']['results']['result']['taxAssessment'])?('$'.number_format($xml['response']['results']['result']['taxAssessment'],2)):'';//taxAssessment
+                $row['yearBuilt'] = isset($xml['response']['results']['result']['yearBuilt'])?$xml['response']['results']['result']['yearBuilt']:'';//yearBuilt
+                $row['lotSizeSqFt'] = isset($xml['response']['results']['result']['lotSizeSqFt'])?$xml['response']['results']['result']['lotSizeSqFt']:'';//lotSizeSqFt
+                $row['finishedSqFt'] = isset($xml['response']['results']['result']['finishedSqFt'])?$xml['response']['results']['result']['finishedSqFt']:'';//finishedSqFt
+                $row['bathrooms'] = isset($xml['response']['results']['result']['bathrooms'])?$xml['response']['results']['result']['bathrooms']:'';//bathrooms
+                $row['bedrooms'] = isset($xml['response']['results']['result']['bedrooms'])?$xml['response']['results']['result']['bedrooms']:'';//bedrooms
+                $row['totalRooms'] = isset($xml['response']['results']['result']['totalRooms'])?$xml['response']['results']['result']['totalRooms']:'';//totalRooms
+                $row['lastSoldDate'] = isset($xml['response']['results']['result']['lastSoldDate'])?$xml['response']['results']['result']['lastSoldDate']:'';//lastSoldDate
+                $row['lastSoldPrice'] = isset($xml['response']['results']['result']['lastSoldPrice'])?('$'.number_format($xml['response']['results']['result']['lastSoldPrice'])):'';//lastSoldPrice
+                $row['amount'] = isset($xml['response']['results']['result']['zestimate']['amount'])?('$'.number_format($xml['response']['results']['result']['zestimate']['amount'])):'';//amount
+                $row['last-updated'] = isset($xml['response']['results']['result']['zestimate']['last-updated'])?$xml['response']['results']['result']['zestimate']['last-updated']:'';//last-updated
+                $row['oneWeekChange'] = isset($xml['response']['results']['result']['zestimate']['oneWeekChange']['@attributes']['deprecated'])?$xml['response']['results']['result']['zestimate']['oneWeekChange']['@attributes']['deprecated']:'';//oneWeekChange
 
                 $valueChanged = isset($xml['response']['results']['result']['zestimate']['valueChange'])?$xml['response']['results']['result']['zestimate']['valueChange']:'';//valueChange
                 if($valueChanged != '') {
@@ -135,29 +159,36 @@ class Address extends CI_Controller {
                         $valueChanged = "<span style='color:#dd4b39;'>$$valueChanged</span>";
                     }
                 }
-                $row[] = $valueChanged;
+                $row['valueChanged'] = $valueChanged;
                 
-                $row[] = 30;    //duration
-                $row[] = 'USD'; //currency
+                $row['duration'] = 30;    //duration
+                $row['currency'] = 'USD'; //currency
 
-                $row[] = isset($xml['response']['results']['result']['zestimate']['valuationRange']['low'])?$xml['response']['results']['result']['zestimate']['valuationRange']['low']:'';//valuationRange_low
-                $row[] = isset($xml['response']['results']['result']['zestimate']['valuationRange']['high'])?$xml['response']['results']['result']['zestimate']['valuationRange']['high']:'';//valuationRange_high
-                $row[] = isset($xml['response']['results']['result']['zestimate']['percentile'])?$xml['response']['results']['result']['zestimate']['percentile']:'';//percentile
-                $row[] = isset($xml['response']['results']['result']['localRealEstate']['region']['zindexValue'])?('$'.$xml['response']['results']['result']['localRealEstate']['region']['zindexValue']):'';//zindexValue
-                $row[] = isset($xml['response']['results']['result']['localRealEstate']['region']['links']['overview'])?$xml['response']['results']['result']['localRealEstate']['region']['links']['overview']:'';//overview
-                $row[] = isset($xml['response']['results']['result']['localRealEstate']['region']['links']['forSaleByOwner'])?$xml['response']['results']['result']['localRealEstate']['region']['links']['forSaleByOwner']:'';//forSaleByOwner
-                $row[] = isset($xml['response']['results']['result']['localRealEstate']['region']['links']['forSale'])?$xml['response']['results']['result']['localRealEstate']['region']['links']['forSale']:'';//forSale
+                $row['low'] = isset($xml['response']['results']['result']['zestimate']['valuationRange']['low'])?$xml['response']['results']['result']['zestimate']['valuationRange']['low']:'';//valuationRange_low
+                $row['high'] = isset($xml['response']['results']['result']['zestimate']['valuationRange']['high'])?$xml['response']['results']['result']['zestimate']['valuationRange']['high']:'';//valuationRange_high
+                $row['percentile'] = isset($xml['response']['results']['result']['zestimate']['percentile'])?$xml['response']['results']['result']['zestimate']['percentile']:'';//percentile
+                $row['zindexValue'] = isset($xml['response']['results']['result']['localRealEstate']['region']['zindexValue'])?('$'.$xml['response']['results']['result']['localRealEstate']['region']['zindexValue']):'';//zindexValue
+                $row['overview'] = isset($xml['response']['results']['result']['localRealEstate']['region']['links']['overview'])?$xml['response']['results']['result']['localRealEstate']['region']['links']['overview']:'';//overview
+                $row['forSaleByOwner'] = isset($xml['response']['results']['result']['localRealEstate']['region']['links']['forSaleByOwner'])?$xml['response']['results']['result']['localRealEstate']['region']['links']['forSaleByOwner']:'';//forSaleByOwner
+                $row['forSale'] = isset($xml['response']['results']['result']['localRealEstate']['region']['links']['forSale'])?$xml['response']['results']['result']['localRealEstate']['region']['links']['forSale']:'';//forSale
             } else {
                 for($k=0;$k<32;$k++)
-                    $row[] = '';                
+                    $row[$col_names[$k]] = '';
             }
             //add html for action
-            $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="edit_address('."'".$person->id."'".')">Edit</a>
+            $row['button'] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="edit_address('."'".$person->id."'".')">Edit</a>
                       <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="delete_address('."'".$person->id."'".')">Delete</a>';
                       //<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="view_address('."'".$person->id."'".')"><i class="glyphicon glyphicon-pencil"></i> View</a>';
             $data[] = $row;
         }
 
+        // $data1 = [];
+        // foreach ($data as $item) { 
+        //     $row = array();
+        //     for($i=0; $i<sizeof($setting_order); $i++)
+        //         $row[] = $item[(int)$setting_order[$i]];
+        //     $data1[] = $row;
+        // }
         $output = array(
             "draw" => $_POST['draw'],
             "recordsTotal" => $this->address_model->count_all(),

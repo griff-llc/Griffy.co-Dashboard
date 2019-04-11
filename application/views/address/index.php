@@ -55,8 +55,49 @@
   </div>
 
   <script type="text/javascript">
-    
-
+    var columns = [
+      "identify",
+      "street_number",
+      "street_name",
+      "city",
+      "state",
+      "zipcode",
+      "data_addtime",
+      "data_starttime",
+      "zpid",
+      "homedetails",
+      "graphsanddata",
+      "mapthishome",
+      "comparables",
+      "latitude",
+      "longitude",
+      "FIPScounty",
+      "useCode",
+      "taxAssessmentYear",
+      "taxAssessment",
+      "yearBuilt",
+      "lotSizeSqFt",
+      "finishedSqFt",
+      "bathrooms",
+      "bedrooms",
+      "totalRooms",
+      "lastSoldDate",
+      "lastSoldPrice",
+      "amount",
+      "last-updated",
+      "oneWeekChange",
+      "valueChanged",
+      "duration",
+      "currency",
+      "low",
+      "high",
+      "percentile",
+      "zindexValue",
+      "overview",
+      "forSaleByOwner",
+      "forSale"      
+    ];
+    var init_order = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40];
     var save_method; //for save method string
     var table;
     
@@ -98,29 +139,62 @@
         dom: 'Bfrtip',
         "scrollX": true,
         scrollCollapse: true,
-        
+        "paging":   false,
         "processing": true,
         "serverSide": true, 
         "ajax": {
           "url": "<?php echo site_url('address/ajax_list')?>",
           "type": "POST"
         },
-        colReorder: true,
-        colReorder: {
-            fixedColumnsLeft: 1,
-            fixedColumnsRight: 1
-        },      
-        "columnDefs": [
-          { 
-            "targets": [ -1,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39], //last column
-            "orderable": false, //set not orderable
-          },
+        columns: [
+          {data:"identify"},
+          {data:"street_number"},
+          {data:"street_name"},
+          {data:"city"},
+          {data:"state"},
+          {data:"zipcode"},
+          {data:"data_addtime"},
+          {data:"data_starttime"},
+          {data:"zpid"},
+          {data:"homedetails"},
+          {data:"graphsanddata"},
+          {data:"mapthishome"},
+          {data:"comparables"},
+          {data:"latitude"},
+          {data:"longitude"},
+          {data:"FIPScounty"},
+          {data:"useCode"},
+          {data:"taxAssessmentYear"},
+          {data:"taxAssessment"},
+          {data:"yearBuilt"},
+          {data:"lotSizeSqFt"},
+          {data:"finishedSqFt"},
+          {data:"bathrooms"},
+          {data:"bedrooms"},
+          {data:"totalRooms"},
+          {data:"lastSoldDate"},
+          {data:"lastSoldPrice"},
+          {data:"amount"},
+          {data:"last-updated"},
+          {data:"oneWeekChange"},
+          {data:"valueChanged"},
+          {data:"duration"},
+          {data:"currency"},
+          {data:"low"},
+          {data:"high"},
+          {data:"percentile"},
+          {data:"zindexValue"},
+          {data:"overview"},
+          {data:"forSaleByOwner"},
+          {data:"forSale"},
+          {data:"button"},
         ],
+        colReorder: true                
       });
 
-
-      for(var i=0; i<40; i++) 
-        table.columns( [i] ).visible(false);
+      
+      
+      table.columns( init_order ).visible(false);
       
       showSetting();
 
@@ -143,7 +217,6 @@
         });        
       });
     });
-
     
     function showSetting() {
       $.ajax({
@@ -152,43 +225,30 @@
         dataType: "JSON",
         success: function(res)
         {
-          table.colReorder.order([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]);
-          table.colReorder.order(res.order.split(','));
-          var items = document.getElementsByName('settingcheck');
+          table.columns( init_order ).visible(false);
+          table.colReorder.reset();
+
+          var data = res.data.split(",")
+          var order = res.order.split(',');
+          for(var i=0; i<order.length; i++)
+            order[i] = parseInt(order[i]);
           
-          for(var i=0; i<40; i++) 
-          {
-            table.columns( [i] ).visible(true);
-            var flag = false;
-            for(var k=0; k<res.dialog.length; k++) {
-              if(Number(res.dialog[k]) == i)
-                flag = true;
-            }
-
-
-            if(flag) {
-              //table.columns( [i] ).visible(true);
-              items[i].checked = true;
-            }
-            else {
-              //table.columns( [i] ).visible(false);
-              items[i].checked = false;
-            }
+          //dialog set
+          var items = document.getElementsByName('settingcheck');          
+          for(var i=0; i<40; i++)
+            items[i].checked = false;
+          for(var i=0; i<data.length; i++){
+            items[columns.indexOf(data[i])].checked = true;
+            table.columns(columns.indexOf(data[i])).visible(true);
           }
-         
-          //var items = document.getElementsByName('settingcheck');
-          for(var i=0; i<res.dorder.length; i++) {
-             var flag = false;
-             for(var k=0;k<res.dialog.length;k++) {
-               if(res.dorder[i] == res.dialog[k]) {
-                  flag = true;
-               }               
-             }
-             
-             if(!flag) {                
-                table.columns( [i] ).visible(false);
-             }
-          }          
+
+          //visible set
+          
+          //order set          
+          table.colReorder.order(order);
+          //table.columns([40]).visible(true);      
+          console.log(data);
+          console.log(order);
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -213,6 +273,7 @@
         $('#get-address-info').prop('disabled',false);
         $('#save-address').prop('disabled',false);
         $('#import_csv_btn').attr('disabled', false);
+        reload_table();
       } else {
         
         $.ajax({
@@ -224,8 +285,7 @@
               var idx = index + 1;
               //show progress
               $('.progress .progress-bar-danger')[0].innerText = idx + ' / ' + total;
-              var dxwidth = parseInt(100/total*(idx)) + '%';
-              reload_table();        
+              var dxwidth = parseInt(100/total*(idx)) + '%';              
               $('.progress .progress-bar-danger').css('width',dxwidth );
               //update address
               getData(idx,total);
@@ -254,7 +314,7 @@
         {         
             result = data;
             var length = data.length;
-            getData(0,length);
+            getData(0,length);            
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
@@ -329,6 +389,7 @@
     {
       
       table.ajax.reload(null,false); //reload datatable ajax 
+      showSetting();
     }   
 
     function save()
@@ -432,6 +493,7 @@
               //if success reload ajax table
               $('#modal_address').modal('hide');
               reload_table();
+              
               swal(
                 'Deleted!',
                 'Your file has been deleted.',
@@ -571,12 +633,14 @@
   
   function setting_save()
   {
+    
     var items = document.getElementsByName('settingcheck');
     var idx = [];
     for(var i=0; i<items.length; i++) {
       if(items[i].checked)
-        idx.push(i);
+        idx.push(columns[i]);
     }
+    
     $.ajax({
       url : "<?php echo site_url('address/savesetting')?>",
       type: "GET",
@@ -586,23 +650,18 @@
       dataType: "JSON",
       success: function(data)
       {
+        
+       
         swal(
           '',
           'Your setting has been saved.',
           'success'
         );
-        var order = table.colReorder.order();
-        for(var i=0;i<40;i++)
-          table.columns( [i] ).visible(false);
-
-        for(var i=0; i<order.length; i++) {
-          for(var k=0; k<idx.length; k++) {             
-            if(idx[k] == order[i])
-              table.columns( [i] ).visible(true);             
-          }   
-        }
+        
+        
+        showSetting();
+        $('#modal_setting').modal('hide');            
          
-        $('#modal_setting').modal('hide');
       },
       error: function (jqXHR, textStatus, errorThrown)
       {

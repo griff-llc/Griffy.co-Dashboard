@@ -90,7 +90,10 @@ class Address_model extends CI_Model {
      */
     public function count_all()
 	{
-		$this->db->from($this->table);
+        $user_id = $this->session->userdata('logged_in')['users_id'];
+
+        $this->db->from($this->table);
+        $this->db->where('user_id',$user_id);
 		return $this->db->count_all_results();
     }
     
