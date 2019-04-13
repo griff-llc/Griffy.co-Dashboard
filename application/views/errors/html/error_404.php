@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <title>404 Page Not Found</title>
+<?php $this->load->view('html/head/include');?>
 <style type="text/css">
 
 ::selection { background-color: #E13300; color: white; }
@@ -57,8 +58,11 @@ p {
 </head>
 <body>
 	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
+		<h1><?php echo $heading = "Error: 404"; ?></h1>
+		<?php echo $message = "Page not found"; ?>
 	</div>
 </body>
+
+<?php $this->load->view('html/footer/include');?>
+
 </html>
