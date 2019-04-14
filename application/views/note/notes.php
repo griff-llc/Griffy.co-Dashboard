@@ -1,3 +1,4 @@
+<?php $this->load->view('html/head'); ?>
 <style type="text/css">
 	.susu{ color: #7c795d; font-family: 'Trocchi', serif; font-size: 36px; font-weight: normal; line-height: 48px; margin: 0; }
 
@@ -6,6 +7,7 @@
   .xde{ color: #7c795d; font-family: 'Source Sans Pro', sans-serif; font-size: 23px; font-weight: 400; line-height: 32px; margin: 0 0 24px; }
 </style>
 
+<div class="row">
 <div class="col-md-12">
 
 <h1 class="susu">Rules and Regulations</h1>
@@ -52,3 +54,5 @@
   </div> 
 </div>
 </div>
+</div>
+<?php $this->load->view('html/footer'); ?>

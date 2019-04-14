@@ -1,12 +1,4 @@
-   <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
-
-    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-  
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/1.3.3/sweetalert2.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/0.4.5/sweetalert2.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/1.3.3/sweetalert2.min.js"></script>
+<?php $this->load->view('html/head'); ?>
 
     <div class = "row">
     
@@ -628,7 +620,6 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
-</body>
 <script>
   
   function setting_save()
@@ -751,4 +742,4 @@
     }
 </script>
 
-</html>
+<?php $this->load->view('html/footer'); ?>
