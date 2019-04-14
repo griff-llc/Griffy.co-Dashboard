@@ -1,24 +1,22 @@
-<?php $this->load->view('html/head'); ?>
-<h1 class="h3 mb-3">KEY</h1>
-  <div class="row">
-    <div class="col-12 d-flex">
-      <div class="card flex-fill w-100">
-        <div class="card-body">
-          <table id="table" class="table table-striped dataTable no-footer dtr-inline" cellspacing="0" width="100%">
-            <thead>
-              <tr>
-                <th>User Name</th>
-                <th>Email Address</th>
-                <th>Regist Date</th>
-                <th style='width:100px;'>Key</th>
-                <th style="width:35px;">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
+   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/1.3.3/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/0.4.5/sweetalert2.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/1.3.3/sweetalert2.min.js"></script>
+
+    <div class = "row">
+      <br />
+      <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>User Name</th>
+            <th>Email Address</th>
+            <th>Regist Date</th>
+            <th style='width:100px;'>Key</th>
+            <th style="width:35px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -133,4 +131,5 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
-<?php $this->load->view('html/footer'); ?>
+</body>
+</html>

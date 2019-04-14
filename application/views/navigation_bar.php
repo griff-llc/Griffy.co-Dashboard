@@ -1,86 +1,62 @@
-<?php $flag = 0 ?>
-<nav class="sidebar">
-			<div class="sidebar-content ">
-        <!-- Logo -->
-        <a href="/" style="text-decoration:none"class="un logo sidebar-brand"><b>ZILLOW </b></a>
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
 
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
 
-				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-          MAIN NAVIGATION
-          </li>
-					<li class="sidebar-item active">
-						<a href="#dashboards" class="sidebar-link">
-            <i class="align-middle" data-feather="sliders"></i>
-            <span class="align-middle">Dashboard</span>
-            </a>
-					</li>
-					<li class="sidebar-item">
-						<a href="#property-information" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="home"></i>
-              <span class="align-middle">Property Information</span>
-            </a>
-						<ul id="property-information" class="sidebar-dropdown list-unstyled collapse ">
-              <?php if($flag == '1') { ?>
-              <li class="sidebar-item">
-                <a class="sidebar-link" href="<?php echo base_url();?>user/getuser">
-                <i class="align-middle" data-feather="user"></i>
-                <span class="align-middle">User</span></a>
-              </li>
-              <li class="sidebar-item">
-                <a class="sidebar-link" href="<?php echo base_url();?>key">
-                  <i class="align-middle" data-feather="key"></i>
-                  <span class="align-middle">Key List</span></a>
-                </a>
-              </li>
-              <?php } ?>
-              <?php if ($flag == '0') { ?>
-              <li class="sidebar-item">
-                <a class="sidebar-link" href="<?php echo base_url();?>address">
-                  <i class="align-middle" data-feather="map"></i>
-                  <span class="align-middle">Address</span></a>
-              </a>
-              </li> 
-              <?php } ?>
-            </ul>
-					</li>
-					<li class="sidebar-item">
-            <a class = "sidebar-link" href="<?php echo base_url();?>user/setting">
-              <i class="align-middle" data-feather="settings"></i>
-              <span class="align-middle">Settings</span>
-            </a>
-          </li>
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel">
+      <div class="pull-left image">
+        <img src="<?=base_url().'images/zillow-icon.png';?>" class="img-circle" alt="User Image" />
+      </div>
+      <div class="pull-left info">
+        <p>ZILLOW</p>
+        <!-- Status -->
+        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu">
+      <li class="header">MAIN NAVIGATION</li>
+      <li><a href=""><i class="fa fa-dashboard"></i>Home</a></li>    
+      <li class="treeview">
+        <a href="#" style="text-decoration:none">
+          <i class="fa fa-users"></i>
+          <span >Property Information</span><i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
           <?php if($flag == '1') { ?>
-          <li class="sidebar-item">
-            <a class = "sidebar-link" href="<?php echo base_url();?>setting">
-              <i class="align-middle" data-feather="settings"></i>
-              <span class="align-middle">Header Setting</span>
-          </a>
+          <li>
+            <a class = "ayam" href="<?php echo base_url();?>user/getuser"><i class="fa fa-circle-o"></i>User</a>
+          </li>
+          <li>
+            <a class = "ayam" href="<?php echo base_url();?>key"><i class="fa fa-circle-o"></i>Key List</a>
           </li>
           <?php } ?>
-          <li class="sidebar-item">
-            <a class = "sidebar-link" href="<?php echo base_url();?>welcome/load_Notes">
-            <i class="align-middle" data-feather="book-open"></i>
-            <span class="align-middle">Notes</span>
-          </a>
-          </li>
-				</ul>
+          <?php if($flag == '0') { ?>
+          <li>
+            <a class = "ayam" href="<?php echo base_url();?>address"><i class="fa fa-circle-o"></i>Address</a>
+          </li> 
+          <?php } ?>
+        </ul>
+      </li>
+      <li>
+        <a class = "ayam" href="<?php echo base_url();?>user/setting"><i class="fa fa-key"></i>Settings</a>
+      </li>
+      <?php if($flag == '1') { ?>
+        <li>
+        <a class = "ayam" href="<?php echo base_url();?>setting"><i class="fa fa-key"></i>Header Setting</a>
+      </li>
+      <?php } ?>
+      <li>
+        <a class = "ayam" href="<?php echo base_url();?>welcome/load_Notes"><i class="fa fa-user-md"></i>Notes</a>
+      </li>
 
-				<div class="sidebar-bottom d-none d-lg-block">
-					<div class="media">
-						<img class="rounded-circle mr-3" src="img/avatars/avatar.jpg" alt="Chris Wood" width="40" height="40">
-						<div class="media-body">
-							<h5 class="mb-1">Chris Wood</h5>
-							<div>
-								<i class="fas fa-circle text-success"></i> Online
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</nav>
-
+    </ul>
+  </section>
+  <!-- /.sidebar -->
+</aside>
 
 <script type="text/javascript">
 
